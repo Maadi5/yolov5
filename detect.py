@@ -1,7 +1,7 @@
 import argparse
 import time
 from pathlib import Path
-
+import numpy as np
 import cv2
 import torch
 import torch.backends.cudnn as cudnn
@@ -14,6 +14,21 @@ from utils.general import check_img_size, check_requirements, check_imshow, non_
 from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized
 
+
+def get_hardhat_clr(im, bins = 25):
+    (b, g, r) = cv2.split(im)
+    a1, b1 = np.histogram(r, bins=bins)
+    a2, b2 = np.histogram(g, bins=bins)
+    a3, b3 = np.histogram(b, bins=bins)
+
+    a1 = a1.tolist()
+    a2 = a2.tolist()
+    a3 = a3.tolist()
+
+    rng = 255 / bins
+    mid = (rng / 2)
+
+    return round(b1[a1.index(max(a1))] + mid), round(b2[a2.index(max(a2))] + mid), round(b3[a3.index(max(a3))] + mid)
 
 def detect(save_img=False):
     source, weights, view_img, save_txt, imgsz = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size
@@ -110,7 +125,12 @@ def detect(save_img=False):
 
                     if save_img or view_img:  # Add bbox to image
                         label = f'{names[int(cls)]} {conf:.2f}'
-                        plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
+                        print(xyxy, 'dims')
+                        h2blu
+                        bb_im = im0[xywh[1]: xywh[1] + xywh[3], xywh[0]:xywh[0] + xywh[2]]
+                        color = get_hardhat_clr(bb_im)
+                        #plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
+                        plot_one_box(xyxy, im0, label=label, color=color, line_thickness=4)
 
             # Print time (inference + NMS)
             print(f'{s}Done. ({t2 - t1:.3f}s)')
