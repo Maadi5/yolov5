@@ -127,7 +127,7 @@ def detect(save_img=False):
                         label = f'{names[int(cls)]} {conf:.2f}'
                         print(xyxy, 'dims')
 #                         h2blu
-                        bb_im = im0[xywh[1]: xywh[1] + xywh[3], xywh[0]:xywh[0] + xywh[2]]
+                        bb_im = im0[xyxy[1]: xyxy[1] + xyxy[3], xyxy[0]:xywh[0] + xyxy[2]]
                         color = get_hardhat_clr(bb_im)
                         #plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
                         plot_one_box(xyxy, im0, label=label, color=color, line_thickness=4)
